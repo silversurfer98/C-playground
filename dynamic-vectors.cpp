@@ -5,7 +5,7 @@
 // g++ FILENAME.o -o sfml-app -lsfml-graphics -lsfml-window -lsfml-system
 // then run ./sfml-app
 
-
+// g++ -c dynamic-vectors.cpp && g++ dynamic-vectors.o -o dynamic-vectors.out && rm dynamic-vectors.o
 
 #include<iostream>
 #include<vector>
