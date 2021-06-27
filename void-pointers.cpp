@@ -4,7 +4,7 @@
 using namespace std;
 
 
-// void pointers can store address of any datatype
+// void pointers can store address of any datatype even struct
 // but we need to typecast it before using it
 // void pointers can cause logical errors rather than throwing compile time error
 /* because we can type cast void ptr to anything so if i typecast void to int 
