@@ -2,6 +2,7 @@
 
 
 #include<iostream>
+#include <iomanip>
 using namespace std;
 
 int i,j;
@@ -32,10 +33,8 @@ float **createArray(int n)
 
 void DelArray(float **addressOfTable, int n)
 {
-    //cout<<"im called"<<endl;
     for(i=0;i<n;i++)
     {
-        //cout<<"im entering for "<<i<<endl;
         delete[] addressOfTable[i];
         //free(addressOfTable[i]);
     }
@@ -43,8 +42,6 @@ void DelArray(float **addressOfTable, int n)
     //free(addressOfTable);
     delete[] addressOfTable;
     //addressOfTable = NULL;
-    //cout<<"im executed"<<endl;
-
 }
 
 void printArray(float **table, int n)
@@ -62,16 +59,7 @@ void printArray(float **table, int n)
 
 float det22(float **array)
 {
-    //if(n==2)
-        return (array[0][0]*array[1][1] - array[0][1]*array[1][0]);
-    // else
-    // {
-    //     cout<<"************************"<<endl;
-    //     cout<<"u fuckwit dont call me ....."<<endl;
-    //     printArray(array,n);
-    //     cout<<"************************"<<endl;
-
-    // }
+    return (array[0][0]*array[1][1] - array[0][1]*array[1][0]);
 }
 
 float **subMatrix(float **table, int n, int l, int k)
@@ -120,15 +108,11 @@ float DetDriver(float **array, int n)
             //cout<<endl;
             if(n-1 == 2)
             {
-                //cout<<"deter : "<<det22(workingArray)<<"  ans before if : "<<ans<<" h and its power : "<<h<<"  "<<pow(-1,h)<<endl;
                 ans = ans + pow(-1,h) * array[0][h] * det22(workingArray);
-                //cout<<"deter : "<<det22(workingArray)<<"  ans after if : "<<ans<<" h and its power : "<<h<<"  "<<pow(-1,h)<<endl;                               
             }
             else
             {
-                //cout<<"  ans before else : "<<ans<<" h and its power : "<<h<<"  "<<pow(-1,h)<<endl;
                 ans = ans + pow(-1,h) * array[0][h] * DetDriver(workingArray,n-1);
-                //cout<<"  ans after else : "<<ans<<" h and its power : "<<h<<"  "<<pow(-1,h)<<endl;                
             }
             DelArray(workingArray,n-1);
             workingArray = nullptr;
@@ -162,16 +146,19 @@ float **inverse(float **array, int n, float det)
         }
     }
     return inverseOfA;
+    DelArray(inverseOfA,n);
+    inverseOfA = nullptr;  
+
 }
 
 int main ()
 {
     int n;
-    cout<<"enter order of matrix : ";
+    cout<<"enter order of matrix or system of equations [Cnnt solve 2X2] : ";
     cin>>n;   
     float **table = createArray(n);
 
-    cout<<"address of the array in main func :"<< table<<endl;
+    cout<<"address of the array :"<<table<<endl;
 
     for(i=0;i<n;i++)
         for(j=0;j<n;j++)
@@ -180,19 +167,60 @@ int main ()
     cout<<endl<<endl;
 
     float det = DetDriver(table,n);
-    if(det==0)
-        cout<<"omale mudiyadhu da koodhi..........."<<endl;
-    
+    if(det!=0)
+    {
+        cout<<"the determinant of "<<endl;
+        cout<<"********** "<<table<<" *************"<<endl;
+        printArray(table,n);
+        cout<<endl<<" is : "<<det<<"   ************"<<endl;
+        
+        transpose(table,n);
+        table = inverse(table,n,det);
+        cout<<"**********  Inverse of the matrix ***********"<<endl;
+        printArray(table,n);
+        cout<<endl<<"***************************************"<<endl;
+        cout<<endl;
 
-    cout<<"the determinant of "<<endl;
-    cout<<"**********"<<table<<"***********"<<endl;
-    printArray(table,n);
-    cout<<endl<<" is : "<<det<<"     ************"<<endl;
-    
-    transpose(table,n);
-    printArray(inverse(table,n,det),n);
-    cout<<endl;
+        float **parameters = new float*[n];
+        for(int z=0;z<n;z++)
+            parameters[z] = new float[1];
 
+        float **solution = new float*[n];
+        for(int v=0;v<n;v++)
+            solution[v] = new float[1];
+                    
+        cout<<"Enter the equation parameters : "<<endl;
+        for(int zx=0;zx<n;zx++)
+            {
+                cout<<"Parameter No. "<<zx+1<<" : ";
+                cin>>parameters[zx][0];
+            }
+
+        for(int i=0;i<n;i++)
+        {
+            solution[i][0] = 0;
+            for(int j=0;j<n;j++)
+            {
+                solution[i][0] = solution[i][0] + table[i][j] * parameters[j][0];
+            }
+        }
+
+
+        cout<<endl<<endl<<"******** Answers are *************"<<endl<<endl;
+        for(int rt=0;rt<n;rt++)
+        {
+            cout<<"answer No. "<<rt+1<<" : ";
+            cout << std::setprecision(3) <<solution[rt][0]<<endl;
+        }
+        
+        DelArray(parameters,n);
+        parameters = nullptr;
+        DelArray(solution,n);
+        solution = nullptr;
+    }
+    else
+        cout<<"omale poda de"<<endl;
+    
     DelArray(table,n);
     table = nullptr;
     
