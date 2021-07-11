@@ -1,9 +1,10 @@
-//g++ -c MyProblem.cpp && g++ MyProblem.o -o MyProblem.out && rm MyProblem.o
+//g++ -c Solve_System_Of_Equations.cpp && g++ Solve_System_Of_Equations.o -o Solve_System_Of_Equations.out && rm Solve_System_Of_Equations.o
 
 
 #include<iostream>
-#include <iomanip>
 using namespace std;
+#define dline cout<<endl<<endl
+#define sline cout<<endl
 
 int i,j;
 
@@ -151,75 +152,141 @@ float **inverse(float **array, int n, float det)
 
 }
 
+void FindSolution(float **table, int n)
+{
+    float **parameters = new float*[n];
+    for(int z=0;z<n;z++)
+        parameters[z] = new float[1];
+
+    float **solution = new float*[n];
+    for(int v=0;v<n;v++)
+        solution[v] = new float[1];
+                
+    cout<<"ENTER THE EQUATION PARAMETERS  ";
+    dline;
+    for(int zx=0;zx<n;zx++)
+        {
+            cout<<"Parameter of equation No. "<<zx+1<<" : ";
+            cin>>parameters[zx][0];
+            sline;
+        }
+
+    for(int i=0;i<n;i++)
+    {
+        solution[i][0] = 0;
+        for(int j=0;j<n;j++)
+        {
+            solution[i][0] = solution[i][0] + table[i][j] * parameters[j][0];
+        }
+    }
+
+
+    cout<<endl<<endl<<"******** ANSWERS ARE *************"<<endl<<endl;
+    for(int rt=0;rt<n;rt++)
+    {
+        cout<<"Answer No. "<<rt+1<<" unknown : ";
+        cout <<solution[rt][0]<<endl;
+    }
+    dline;
+    sline;
+    
+    DelArray(parameters,n);
+    parameters = nullptr;
+    DelArray(solution,n);
+    solution = nullptr;
+}
+
 int main ()
 {
+    dline;
     int n;
-    cout<<"enter order of matrix or system of equations [Cnnt solve 2X2] : ";
-    cin>>n;   
+    cout<<"enter order of ( matrix or ) system of equations : ";
+    cin>>n; 
+    if(n<=1)
+    {
+        cout<<"venam philips ehh !!!........"<<endl;
+        return 0;
+    }
+    
     float **table = createArray(n);
 
+    sline;
     cout<<"address of the array :"<<table<<endl;
+    sline;
 
     for(i=0;i<n;i++)
-        for(j=0;j<n;j++)
-            cin>>table[i][j];
-  
-    cout<<endl<<endl;
-
-    float det = DetDriver(table,n);
-    if(det!=0)
     {
-        cout<<"the determinant of "<<endl;
-        cout<<"********** "<<table<<" *************"<<endl;
-        printArray(table,n);
-        cout<<endl<<" is : "<<det<<"   ************"<<endl;
-        
-        transpose(table,n);
-        table = inverse(table,n,det);
-        cout<<"**********  Inverse of the matrix ***********"<<endl;
-        printArray(table,n);
-        cout<<endl<<"***************************************"<<endl;
-        cout<<endl;
-
-        float **parameters = new float*[n];
-        for(int z=0;z<n;z++)
-            parameters[z] = new float[1];
-
-        float **solution = new float*[n];
-        for(int v=0;v<n;v++)
-            solution[v] = new float[1];
-                    
-        cout<<"Enter the equation parameters : "<<endl;
-        for(int zx=0;zx<n;zx++)
-            {
-                cout<<"Parameter No. "<<zx+1<<" : ";
-                cin>>parameters[zx][0];
-            }
-
-        for(int i=0;i<n;i++)
+        sline;
+        for(j=0;j<n;j++)
         {
-            solution[i][0] = 0;
-            for(int j=0;j<n;j++)
-            {
-                solution[i][0] = solution[i][0] + table[i][j] * parameters[j][0];
-            }
-        }
-
-
-        cout<<endl<<endl<<"******** Answers are *************"<<endl<<endl;
-        for(int rt=0;rt<n;rt++)
-        {
-            cout<<"answer No. "<<rt+1<<" : ";
-            cout << std::setprecision(3) <<solution[rt][0]<<endl;
-        }
-        
-        DelArray(parameters,n);
-        parameters = nullptr;
-        DelArray(solution,n);
-        solution = nullptr;
+            cout<<"Enter Equation No. "<<i+1<<" and coefficient No. "<<j+1<<" : ";
+            cin>>table[i][j];
+            sline;
+        }           
     }
+          
+    dline;
+    float det = 0, temp = 0;
+
+    if(n==2)
+    {
+        det = det22(table);
+        if(det!=0)
+        {
+            cout<<"the determinant of "<<endl;
+            //cout<<"********** "<<table<<" *************"<<endl;
+            printArray(table,n);
+            cout<<endl<<" is : "<<det<<"   ************"<<endl;
+            temp = table[0][0];
+            table[0][0] = table[1][1];
+            table[1][1] = temp;
+            temp = 0;
+            temp = table[0][1];
+            table[0][1] = table[1][0];
+            table[1][0] = temp;
+            table[0][0] = (-1)*table[0][0];
+            table[1][1] = (-1)*table[1][1];
+            for(int i=0;i<n;i++)
+                for(int j=0;j<n;j++)
+                    table[i][j] = table[i][j]/det;
+
+            dline;            
+            cout<<"**********  Inverse of the matrix ***********"<<endl;
+            printArray(table,n);
+            cout<<endl<<"***************************************"<<endl<<endl;
+            
+            FindSolution(table,n);
+        }
+        else
+          cout<<"adhu seri unga vaai unga uruttu"<<endl;   
+    }
+
+    else if(n>2)
+    {
+        det = DetDriver(table,n);
+        if(det!=0)
+        {
+            cout<<"the determinant of "<<endl;
+            //cout<<"********** "<<table<<" *************"<<endl;
+            printArray(table,n);
+            cout<<endl<<" is : "<<det<<"   ************"<<endl;
+            
+            transpose(table,n);
+            table = inverse(table,n,det);
+            dline;
+            cout<<"**********  Inverse of the matrix ***********"<<endl;
+            printArray(table,n);
+            cout<<endl<<"***************************************"<<endl<<endl;
+
+            FindSolution(table,n);
+            
+        }
     else
-        cout<<"omale poda de"<<endl;
+        cout<<"adhu seri unga vaai unga uruttu"<<endl;
+    }
+
+    else
+        cout<<"3 ah thotadhu yaaru xD..........."<<endl;
     
     DelArray(table,n);
     table = nullptr;
