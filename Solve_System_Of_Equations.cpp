@@ -1,5 +1,8 @@
-//g++ -c Solve_System_Of_Equations.cpp && g++ Solve_System_Of_Equations.o -o Solve_System_Of_Equations.out && rm Solve_System_Of_Equations.o
-
+/*
+g++ -c Solve_System_Of_Equations.cpp && g++ Solve_System_Of_Equations.o -o Solve_System_Of_Equations.out && rm Solve_System_Of_Equations.o
+for compiler optimization
+g++ -g -O2 -o Solve_System_Of_Equations Solve_System_Of_Equations.cpp   
+*/
 
 #include<iostream>
 using namespace std;
@@ -205,6 +208,7 @@ int main ()
     if(n<=1)
     {
         cout<<"venam philips ehh !!!........"<<endl;
+        dline;
         return 0;
     }
     
@@ -258,7 +262,7 @@ int main ()
             FindSolution(table,n);
         }
         else
-          cout<<"adhu seri unga vaai unga uruttu"<<endl;   
+          cout<<"adhu seri unga vaai unga uruttu"<<endl<<endl<<endl;   
     }
 
     else if(n>2)
@@ -282,11 +286,13 @@ int main ()
             
         }
     else
-        cout<<"adhu seri unga vaai unga uruttu"<<endl;
+        cout<<"adhu seri unga vaai unga uruttu"<<endl<<endl<<endl;
     }
 
     else
-        cout<<"3 ah thotadhu yaaru xD..........."<<endl;
+        cout<<"3 ah thotadhu yaaru xD..........."<<endl<<endl<<endl;
+
+    dline;
     
     DelArray(table,n);
     table = nullptr;
