@@ -1,0 +1,3 @@
+// to set precision
+#include <iomanip>
+cout << std::setprecision(3) <<number<<endl;
